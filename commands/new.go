@@ -57,7 +57,7 @@ func NewProject(name, template, deployment, router string) error {
 		cfg.ProjectName = sanitizeName(res)
 	}
 
-	if !in(cfg.Template, TemplateOptions) {
+	if !inCaseInsensitive(cfg.Template, TemplateOptions) {
 		choice, err := selectFrom("Şablon (API / CLI / W/ReactJS)", TemplateOptions)
 		if err != nil {
 			fmt.Println(red + "İptal edildi." + reset)
@@ -66,7 +66,7 @@ func NewProject(name, template, deployment, router string) error {
 		cfg.Template = choice
 	}
 
-	if !in(cfg.Deployment, DeploymentOptions) {
+	if !inCaseInsensitive(cfg.Deployment, DeploymentOptions) {
 		choice, err := selectFrom("Dağıtım (docker/kubernetes/no-deployment)", DeploymentOptions)
 		if err != nil {
 			fmt.Println(red + "İptal edildi." + reset)
@@ -75,7 +75,7 @@ func NewProject(name, template, deployment, router string) error {
 		cfg.Deployment = choice
 	}
 
-	if !in(strings.Title(strings.ToLower(cfg.Router)), RouterOptions) {
+	if !inCaseInsensitive(cfg.Router, RouterOptions) {
 		choice, err := selectFrom("Router (Gin/Chi)", RouterOptions)
 		if err != nil {
 			fmt.Println(red + "İptal edildi." + reset)
@@ -116,6 +116,16 @@ func NewProject(name, template, deployment, router string) error {
 func in[T comparable](v T, list []T) bool {
 	for _, x := range list {
 		if v == x {
+			return true
+		}
+	}
+	return false
+}
+
+// inCaseInsensitive checks if a string value exists in a list (case-insensitive)
+func inCaseInsensitive(v string, list []string) bool {
+	for _, x := range list {
+		if strings.EqualFold(v, x) {
 			return true
 		}
 	}

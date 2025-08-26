@@ -2,7 +2,7 @@ package services
 
 import (
 	"errors"
-	"your-app/app/models"
+	"{{.ProjectName}}/app/models"
 )
 
 // {{.ModelName}}Service handles business logic for {{.ModelName}}

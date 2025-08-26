@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
-	"your-app/app/models"
+	"{{.ProjectName}}/app/models"
 )
 
 // {{.ModelName}}Controller handles {{.ModelName}} related requests

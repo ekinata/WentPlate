@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -57,10 +58,48 @@ func PrintHelp() {
 	ShowHelp()
 }
 
+// readProjectConfig reads the project configuration from wentconfig.json
+func readProjectConfig() (*Config, error) {
+	configFile := "wentconfig.json"
+	
+	// Check if config file exists
+	if _, err := os.Stat(configFile); os.IsNotExist(err) {
+		return nil, fmt.Errorf("wentconfig.json not found - make sure you're in a WentPlate project directory")
+	}
+	
+	// Read the config file
+	data, err := os.ReadFile(configFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read wentconfig.json: %v", err)
+	}
+	
+	// Parse JSON
+	var config Config
+	if err := json.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to parse wentconfig.json: %v", err)
+	}
+	
+	return &config, nil
+}
+
 // createFileFromTemplate creates a file from a template
 func CreateFileFromTemplate(templatePath, outputPath, modelName string) {
 	// Extract template name from path (e.g., "internal/templates/model.tpl" -> "model")
 	templateName := strings.TrimSuffix(strings.TrimPrefix(templatePath, "internal/templates/"), ".tpl")
+
+	// Read project configuration to get project name
+	config, err := readProjectConfig()
+	if err != nil {
+		fmt.Printf("%s[WARNING]%s %s\n", yellow, reset, err.Error())
+		fmt.Printf("Using default app name 'your-app' for imports\n")
+		// Create a default config
+		config = &Config{
+			ProjectName: "your-app",
+			Template:    "API",
+			Deployment:  "No-Deployment",
+			Router:      "gin",
+		}
+	}
 
 	// Get template content from embedded filesystem
 	templateContent, err := embedded.GetTemplate(templateName)
@@ -94,13 +133,17 @@ func CreateFileFromTemplate(templatePath, outputPath, modelName string) {
 	}
 	defer f.Close()
 
-	// Prepare template data
+	// Prepare template data with project information
 	data := struct {
-		ModelName string
-		TableName string
+		ModelName   string
+		TableName   string
+		ProjectName string
+		AppName     string
 	}{
-		ModelName: modelName,
-		TableName: strings.ToLower(modelName) + "s",
+		ModelName:   modelName,
+		TableName:   strings.ToLower(modelName) + "s",
+		ProjectName: config.ProjectName,
+		AppName:     config.ProjectName, // For backward compatibility
 	}
 
 	// Execute template

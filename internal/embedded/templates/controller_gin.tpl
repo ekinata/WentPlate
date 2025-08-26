@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"your-app/app/models"
+	"{{.ProjectName}}/app/models"
 )
 
 // {{.ModelName}}Controller handles {{.ModelName}} related requests
