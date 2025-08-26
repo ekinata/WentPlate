@@ -1,9 +1,7 @@
 # WentPlate
 
 <div align="center">
-  <img src="logo.png" alt="WentPlate Logo" width="200"/>
-  
-  <h3>A minimal project initializer for Go applications</h3>
+  <h3>A comprehensive project scaffolding tool for Go applications</h3>
   
   [![Go Version](https://img.shields.io/badge/go-1.21+-blue.svg)](https://golang.org)
   [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -14,13 +12,15 @@
 
 ## 🚀 Features
 
-- **Multiple Templates**: Choose from API, CLI, API+CLI, API+ReactJS, or API+ReactJS+CLI project templates
-- **Deployment Options**: Built-in support for Docker, Kubernetes, or no-deployment configurations
-- **Interactive Mode**: User-friendly prompts when arguments are not provided
-- **Command Line Interface**: Full CLI support with flags for automation
-- **Cross-Platform**: Works on Linux, macOS, and Windows
-- **Go Integration**: Automatically detects Go installation and version
-- **Clean Configuration**: Generates structured `wentconfig.json` for your project setup
+- **🏗️ Project Scaffolding**: Multiple templates for different project types
+- **🎛️ Router Selection**: Choose between Gin and Chi HTTP routers
+- **📁 Code Generation**: Laravel Artisan-style commands for generating boilerplate code  
+- **📦 Package Management**: Download and manage external packages in your project
+- **🎯 Interactive Mode**: User-friendly prompts when arguments are not provided
+- **⚡ Command Line Interface**: Full CLI support with flags for automation
+- **🌐 Cross-Platform**: Works on Linux, macOS, and Windows
+- **🔗 Go Integration**: Automatically detects Go installation and version
+- **⚙️ Clean Configuration**: Generates structured `wentconfig.json` for your project setup
 
 ## 📦 Installation
 
@@ -58,63 +58,156 @@ The installer will automatically check and install:
 
 ## 🎯 Usage
 
-### Interactive Mode
+### 1. Project Creation
 
-Simply run `went` without any arguments to start the interactive setup:
+#### Interactive Mode
+Simply run `went` or `went new` without any arguments:
 
 ```bash
 went
+# or
+went new
 ```
 
-This will guide you through:
-1. **Project Name**: Enter your project name (will be sanitized automatically)
-2. **Template Selection**: Choose from available templates
-3. **Deployment Configuration**: Select your deployment strategy
+#### Command Line Mode
+```bash
+went new --name my-awesome-project --template API --deployment Docker --router gin
+```
 
-### Command Line Mode
+#### Router Selection
+WentPlate supports multiple HTTP routers:
 
-Use flags for automated project creation:
+- **Gin** (default): Fast and simple web framework
+- **Chi**: Lightweight, composable router
+
+Choose your router during project creation or via `.env` configuration:
 
 ```bash
-went --name my-awesome-project --template API --deployment Docker
+# Create project with Chi router
+went new --name my-app --router chi
+
+# Or set in .env file
+echo "ROUTER=chi" > .env
+went make:controller User  # Uses Chi template
 ```
 
-#### Available Flags
+### 2. Code Generation (Laravel Artisan Style)
+
+#### Generate Models
+```bash
+went make:model User
+went make:model Product
+```
+
+#### Generate Controllers
+```bash
+went make:controller Auth
+went make:controller User
+```
+
+#### Generate Middleware
+```bash
+went make:middleware JWT
+went make:middleware CORS
+```
+
+#### Generate Services
+```bash
+went make:service User
+went make:service Email
+```
+
+#### Generate Migrations
+```bash
+went make:migration create_users_table
+went make:migration add_email_to_users
+```
+
+### 3. Package Management
+
+#### Install Packages from Git Repositories
+```bash
+# Install Gin web framework
+went pkg:install https://github.com/gin-gonic/gin gin
+
+# Install GORM
+went pkg:install https://github.com/go-gorm/gorm gorm
+
+# Install custom packages
+went pkg:install https://github.com/your-org/your-package custom-pkg
+```
+
+#### List Installed Packages
+```bash
+went pkg:list
+```
+
+#### Remove Packages
+```bash
+went pkg:remove gin
+went pkg:remove gorm
+```
+
+#### Update Import Paths
+```bash
+went pkg:update gin ./app
+```
+
+## 📋 Command Reference
+
+### Project Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `went` | Create new project (interactive) | `went` |
+| `went new` | Create new project with options | `went new --name my-app` |
+
+#### Project Creation Flags
 
 | Flag | Short | Description | Options |
 |------|-------|-------------|---------|
 | `--name` | `-N` | Project name | Any valid project name |
 | `--template` | `-T` | Project template | `API`, `CLI`, `API+CLI`, `API+ReactJS`, `API+ReactJS+CLI` |
 | `--deployment` | `-D` | Deployment type | `Docker`, `Kubernetes`, `No-Deployment` |
-| `--help` | `-h` | Show help | - |
+| `--router` | `-R` | HTTP router | `Gin`, `Chi` (default: `Gin`) |
 
-### Examples
+### Code Generation Commands
 
-#### Basic API Project
-```bash
-went -N my-api -T API -D No-Deployment
-```
+| Command | Description | Example |
+|---------|-------------|---------|
+| `make:model <name>` | Generate model file | `went make:model User` |
+| `make:controller <name>` | Generate controller file | `went make:controller Auth` |
+| `make:middleware <name>` | Generate middleware file | `went make:middleware JWT` |
+| `make:service <name>` | Generate service file | `went make:service User` |
+| `make:migration <name>` | Generate migration file | `went make:migration create_users` |
 
-#### Full-Stack Application with Kubernetes
-```bash
-went --name my-fullstack-app --template "API+ReactJS" --deployment Kubernetes
-```
+### Package Management Commands
 
-#### CLI Tool with Docker
-```bash
-went -N my-cli-tool -T CLI -D Docker
-```
+| Command | Description | Example |
+|---------|-------------|---------|
+| `pkg:install <url> <name>` | Install package from Git | `went pkg:install https://github.com/gin-gonic/gin gin` |
+| `pkg:list` | List installed packages | `went pkg:list` |
+| `pkg:remove <name>` | Remove package | `went pkg:remove gin` |
+| `pkg:update <name> <dir>` | Update import paths | `went pkg:update gin ./app` |
 
-## 🎨 Templates
+### Utility Commands
+
+| Command | Description |
+|---------|-------------|
+| `version` | Show version information |
+| `help` | Show help message |
+
+## 🎨 Project Templates
 
 ### API
-- RESTful API server
+- RESTful API server with Gin
 - Basic routing structure
 - Middleware support
 - Database integration ready
+- GORM models
 
 ### CLI
-- Command-line interface
+- Command-line interface with Cobra
 - Subcommand support
 - Flag parsing
 - User-friendly help system
@@ -126,7 +219,7 @@ went -N my-cli-tool -T CLI -D Docker
 
 ### API+ReactJS
 - Full-stack web application
-- React frontend
+- React frontend with modern tooling
 - Go API backend
 - Development and production builds
 
@@ -155,19 +248,38 @@ went -N my-cli-tool -T CLI -D Docker
 - Environment configuration
 - Manual deployment ready
 
-## 📋 Output
+## � Generated File Structure
 
-After running `went`, you'll get a `wentconfig.json` file with your project configuration:
+When you run generation commands, files are created in the following structure:
 
-```json
-{
-  "project_name": "my-awesome-project",
-  "template": "API+ReactJS",
-  "deployment": "Docker"
-}
+```
+your-project/
+├── app/
+│   ├── controllers/     # Generated controllers
+│   ├── models/         # Generated models
+│   ├── middleware/     # Generated middleware
+│   ├── services/       # Generated services
+│   └── migrations/     # Generated migrations
+├── pkg/               # Installed packages
+├── internal/
+│   └── templates/     # Template files
+└── wentconfig.json   # Project configuration
 ```
 
-This configuration file can be used by other tools in the Went ecosystem to generate your project structure.
+## 📦 Package Management
+
+WentPlate includes a powerful package management system that allows you to:
+
+1. **Install packages** directly from Git repositories into a local `pkg/` folder
+2. **Manage dependencies** without affecting your `go.mod`
+3. **Update import paths** to use local packages
+4. **Version control** your dependencies as part of your project
+
+This is particularly useful for:
+- **Private packages** that aren't available in public repositories
+- **Vendoring dependencies** for air-gapped environments
+- **Customizing third-party packages** without forking
+- **Ensuring reproducible builds** across environments
 
 ## 🛠️ Development
 
@@ -190,18 +302,49 @@ go build -o went main.go
 - [promptui](https://github.com/manifoldco/promptui) - Interactive prompts
 - Go standard library
 
-## 📚 Additional Commands
+## � Examples
 
-### Version Information
+### Complete Workflow Example
+
 ```bash
-went version
+# 1. Create a new API project
+went new --name blog-api --template API --deployment Docker
+
+# 2. Generate models
+went make:model User
+went make:model Post
+went make:model Comment
+
+# 3. Generate controllers
+went make:controller User
+went make:controller Post
+went make:controller Comment
+
+# 4. Generate services
+went make:service User
+went make:service Post
+
+# 5. Generate middleware
+went make:middleware Auth
+went make:middleware CORS
+
+# 6. Install packages
+went pkg:install https://github.com/gin-gonic/gin gin
+went pkg:install https://github.com/go-gorm/gorm gorm
+
+# 7. List installed packages
+went pkg:list
 ```
 
-### Help
+### Laravel Artisan Style Commands
+
+If you're familiar with Laravel, you'll feel right at home:
+
 ```bash
-went help
-# or
-went --help
+# Laravel Artisan          # WentPlate Equivalent
+php artisan make:model User    # went make:model User
+php artisan make:controller    # went make:controller User
+php artisan make:middleware    # went make:middleware Auth
 ```
 
 ## 🤝 Contributing
@@ -219,7 +362,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Built with ❤️ for the Go community
-- Inspired by modern project scaffolding tools
+- Inspired by Laravel Artisan and modern project scaffolding tools
 - Thanks to all contributors and users
 
 ---
