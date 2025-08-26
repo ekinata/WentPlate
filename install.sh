@@ -52,7 +52,7 @@ install_for_windows_layer() {
 
 ### === Binary İndirme ve Test === ###
 install_went() {
-  local RELEASE_URL="https://github.com/ekinata/WentPlate/releases/download/test/went"
+  local RELEASE_URL="https://github.com/ekinata/WentPlate/releases/download/latest/went"
   local INSTALL_DIR="/usr/local/bin"
   local BINARY="$INSTALL_DIR/went"
 

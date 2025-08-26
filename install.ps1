@@ -48,7 +48,7 @@ function Install-ForWindows {
 
 ### === Binary İndirme ve Test === ###
 function Install-Went {
-    $RELEASE_URL = "https://github.com/ekinata/WentPlate/releases/download/test/went.exe"
+    $RELEASE_URL = "https://github.com/ekinata/WentPlate/releases/download/latest/went.exe"
     $INSTALL_DIR = "$env:ProgramFiles\went"
     $BINARY = "$INSTALL_DIR\went.exe"
 
