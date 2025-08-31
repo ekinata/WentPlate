@@ -11,8 +11,8 @@ var validate = validator.New()
 // {{.ModelName}} represents the {{.ModelName}} model
 type {{.ModelName}} struct {
 	ID          uint           `json:"id" gorm:"primaryKey,autoIncrement"`
-	Name        string         `json:"name" gorm:"column:name" validate:"required"`
-	Description string         `json:"description" gorm:"column:description"`
+	Name        string         `json:"name" gorm:"column:name" validate:"required_if=ID 0"`
+	Description string         `json:"description" gorm:"column:description" validate:"omitempty,max=255"`
 	CreatedAt   time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   time.Time      `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt   gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
